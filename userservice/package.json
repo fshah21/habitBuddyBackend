@@ -12,7 +12,9 @@
   "description": "",
   "dependencies": {
     "express": "^4.19.2",
-    "firebase-functions": "^5.0.1"
+    "firebase-functions": "^5.0.1",
+    "firebase-tools": "^13.15.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
