@@ -1,5 +1,11 @@
 import * as functions from 'firebase-functions';
 import express from "express";
+const admin = require('firebase-admin');
+const serviceAccount = require('../keys/habitbuddy.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
+export const db = admin.firestore();
 
 const app = express();
 
