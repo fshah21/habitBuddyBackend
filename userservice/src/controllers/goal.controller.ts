@@ -53,4 +53,36 @@ export class GoalController {
             return res.status(500).send('Error retrieving goals: ' + error.message);
         }
     }
+
+    static async addUserGoal(req: Request, res: Response) {
+        try {
+            const { user_id, goal_id } = req.body;
+
+            // Basic validation
+            if (!user_id || !goal_id) {
+                return res.status(400).send('User ID and Goal ID are required');
+            }
+
+            // Check if the goal exists
+            const goalDoc = await db.collection('goals').doc(goal_id).get();
+            if (!goalDoc.exists) {
+                return res.status(404).send('Goal not found');
+            }
+
+            // Create a new entry in usergoalmatches for the user_id and goal_id pair
+            const matchId = uuidv4();
+            await db.collection('usergoalmatches').doc(matchId).set({
+                user_id: user_id,
+                goal_id: goal_id,
+            });
+
+            return res.status(201).send({
+                message: 'User goal added successfully',
+                matchId: matchId
+            });
+        } catch (error) {
+            console.error("ERROR : " + error);
+            return res.status(500).send('Error adding user goal: ' + error.message);
+        }
+    }
 }
