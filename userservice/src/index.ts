@@ -1,12 +1,15 @@
 import * as functions from 'firebase-functions';
 import express from "express";
 import { userRoutes } from './routes/user.routes';
+import { getFirestore } from "firebase-admin/firestore";
+
 const admin = require('firebase-admin');
 const serviceAccount = require('./keys/habitbuddy.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
 });
-export const db = admin.firestore();
+export const db = getFirestore("habitbuddy");
 
 const app = express();
 

@@ -23,7 +23,6 @@ export class UserController {
             console.log(db);
 
             await db.collection('users').doc(userId).set({
-                id: userId,
                 email: email,
                 password: password, // In a real application, never store plain text passwords. Use hashing (e.g., bcrypt).
             });
@@ -35,6 +34,7 @@ export class UserController {
                 userId: userId,
             });
         } catch (error) {
+            console.log("ERROR : " + error);
             return res.status(500).send('Error creating user: ' + error.message);
         }
     }
