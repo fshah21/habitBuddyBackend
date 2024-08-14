@@ -30,4 +30,27 @@ export class GoalController {
             return res.status(500).send('Error adding goal: ' + error.message);
         }
     }
+
+    static async getAllGoals(req: Request, res: Response) {
+        try {
+            // Fetch all documents from the 'goals' collection
+            const goalsSnapshot = await db.collection('goals').get();
+
+            // Check if there are any documents
+            if (goalsSnapshot.empty) {
+                return res.status(404).send('No goals found');
+            }
+
+            // Map the documents to an array of goal objects
+            const goals = goalsSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            return res.status(200).send(goals);
+        } catch (error) {
+            console.error("ERROR : " + error);
+            return res.status(500).send('Error retrieving goals: ' + error.message);
+        }
+    }
 }
