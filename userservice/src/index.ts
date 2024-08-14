@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import express from "express";
 import { userRoutes } from './routes/user.routes';
 import { getFirestore } from "firebase-admin/firestore";
+import { goalRoutes } from './routes/goal.routes';
 
 const admin = require('firebase-admin');
 const serviceAccount = require('./keys/habitbuddy.json');
@@ -20,5 +21,6 @@ app.use('/healthCheck', (_, res) => {
 })
 
 app.use(userRoutes);
+app.use(goalRoutes);
 
 export const userservice = functions.region('asia-south1').https.onRequest(app);
