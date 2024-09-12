@@ -31,6 +31,24 @@ export class GoalController {
         }
     }
 
+    static async getGoalById(req: Request, res: Response) {
+        const { goal_id } = req.params;
+
+        try {
+            // Retrieve the goal from Firestore
+            const goalDoc = await db.collection('goals').doc(goal_id).get();
+
+            if (!goalDoc.exists) {
+                return res.status(404).send('Goal not found');
+            }
+
+            return res.status(200).send(goalDoc.data());
+        } catch (error) {
+            console.error("ERROR : " + error);
+            return res.status(500).send('Error retrieving goal: ' + error.message);
+        }
+    }
+
     static async getAllGoals(req: Request, res: Response) {
         try {
             // Fetch all documents from the 'goals' collection

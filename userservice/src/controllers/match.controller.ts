@@ -62,4 +62,54 @@ export class MatchController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+  static async getUserGoalMatches(req: Request, res: Response) {
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ message: 'user_id is required' });
+    }
+
+    try {
+      const userGoalMatchesRef = db.collection('usergoalmatches');
+
+      console.log("USER GOAL MATCHES", userGoalMatchesRef);
+
+      // Fetch matched goals (matched_with is present)
+      const matchedSnapshot = await userGoalMatchesRef
+        .where('user_id', '==', user_id)
+        .where('matched_with', '!=', null) // Check for any non-null matched_with
+        .get();
+
+      console.log("")
+
+      const matchedGoals = matchedSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("MATCHED GOALS", matchedGoals);
+      // Fetch unmatched goals (matched_with is null or undefined)
+      const unmatchedSnapshot = await userGoalMatchesRef
+        .where('user_id', '==', user_id)
+        .get();
+
+      const unmatchedGoals = unmatchedSnapshot.docs
+        .filter(doc => !doc.data().hasOwnProperty('matched_with') || doc.data().matched_with === null)
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        
+      console.log("UNMATCHED GOALS", unmatchedGoals);
+
+      return res.status(200).json({
+        matched: matchedGoals,
+        unmatched: unmatchedGoals,
+      });
+    } catch (error) {
+      console.error('Error finding user goal matches:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
 }
