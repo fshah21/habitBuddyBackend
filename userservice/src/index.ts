@@ -4,6 +4,7 @@ import { userRoutes } from './routes/user.routes';
 import { getFirestore } from "firebase-admin/firestore";
 import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
+import { server, io } from './socket';
 
 const admin = require('firebase-admin');
 const serviceAccount = require('./keys/habitbuddy.json');
@@ -24,5 +25,11 @@ app.use('/healthCheck', (_, res) => {
 app.use(userRoutes);
 app.use(goalRoutes);
 app.use(matchesRoutes);
+
+const httpServer = server.listen(3000, () => {
+    console.log('HTTP Server is running on port 3000');
+});
+
+io.attach(httpServer);
 
 export const userservice = functions.region('asia-south1').https.onRequest(app);
