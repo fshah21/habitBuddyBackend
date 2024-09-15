@@ -23,17 +23,19 @@ jobs:
         with:
           path: |
             ~/.npm
-            **/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            userservice/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('userservice/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
       - name: Install dependencies
+        working-directory: userservice
         run: npm install
 
       - name: Build Docker image
+        working-directory: userservice
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/userservice .
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend .
 
       - name: Authenticate Docker to Google Cloud
         run: |
@@ -41,12 +43,12 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/userservice
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend
 
       - name: Deploy to Google Cloud Run
         run: |
-          gcloud run deploy userservice \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/userservice \
+          gcloud run deploy habitbuddy-backend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated
