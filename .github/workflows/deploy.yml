@@ -32,6 +32,18 @@ jobs:
         working-directory: userservice
         run: npm install
 
+      - name: Install Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # Set up Docker authentication to use Google Cloud credentials
+      - name: Set up Docker authentication
+        run: |
+          gcloud auth configure-docker
+
       - name: Build Docker image
         working-directory: userservice
         run: |
