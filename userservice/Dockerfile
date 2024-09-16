@@ -1,20 +1,24 @@
-# Use an official Node.js runtime as the base image
-FROM node:18-slim
+# Base image
+FROM node:18
 
-# Set the working directory in the container
-WORKDIR /src
+# Set working directory
+WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install app dependencies
+# Install dependencies
 RUN npm install
 
-# Bundle the app source code inside the Docker image
+# Copy the rest of the application code
 COPY . .
+
+# Set environment variable for service account key
+ARG SERVICE_ACCOUNT
+ENV SERVICE_ACCOUNT=${SERVICE_ACCOUNT}
 
 # Build the TypeScript code
 RUN npm run build
 
 # Specify the command to run when the container starts
-CMD [ "npm", "start" ]
+CMD ["node", "dist/index.js"]
