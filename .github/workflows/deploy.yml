@@ -1,72 +1,52 @@
-name: Deploy to Google Cloud Run
+name: Habit Buddy Backend
 
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
-          node-version: '18'
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
 
-      - name: Cache Node modules
-        uses: actions/cache@v3
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
         with:
-          path: |
-            ~/.npm
-            userservice/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('userservice/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          version: ">= 363.0.0"
 
-      - name: Install dependencies
-        working-directory: userservice
-        run: npm install
+      - name: Configure docker for GCP
+        run: gcloud auth configure-docker
 
-      - name: Install Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
         with:
-          version: 'latest'
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          context: ./userservice
+          file: ./userservice/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/userservice:latest
+          build-args: |
+            HTTP_PORT=8080
 
-      # Set up Docker authentication to use Google Cloud credentials
-      - name: Set up Docker authentication
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/userservice:latest
+          service: userservice
+          region: asia-south1
+          no_traffic: true
+
+      - name: Verify new deployment
+        run: | # Optionally add your health check commands here
+          echo "Check the new deployment health"
+
+      - name: Migrate traffic
         run: |
-          gcloud auth configure-docker
-
-      - name: Build Docker image
-        working-directory: userservice
-        run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend .
-
-      - name: Debug secrets
-        run: echo "${{ secrets.GCP_SA_KEY }}"
-
-      - name: Authenticate Docker to Google Cloud
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" | docker login -u _json_key --password-stdin https://gcr.io
-
-      - name: Push Docker image
-        run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend
-
-      - name: Deploy to Google Cloud Run
-        run: |
-          gcloud run deploy habitbuddy-backend \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/habitbuddy-backend \
-            --platform managed \
-            --region ${{ secrets.GCP_REGION }} \
-            --allow-unauthenticated
-
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+          gcloud run services update-traffic userservice --to-latest --region asia-south1 --platform managed
