@@ -6,12 +6,12 @@ import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
 import { server, io } from './socket';
 
-// const admin = require('firebase-admin');
-// const serviceAccount = require('./keys/habitbuddy.json');
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
-// });
+const admin = require('firebase-admin');
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT || '{}');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
+});
 
 export const db = getFirestore("habitbuddy");
 
