@@ -21,4 +21,4 @@ ENV SERVICE_ACCOUNT=${SERVICE_ACCOUNT}
 RUN npm run build
 
 # Specify the command to run when the container starts
-CMD ["node", "dist/index.js"]
+CMD ["node", "lib/index.js"]
