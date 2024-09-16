@@ -31,5 +31,3 @@ const httpServer = server.listen(3000, () => {
 });
 
 io.attach(httpServer);
-
-export const userservice = functions.region('asia-south1').https.onRequest(app);
