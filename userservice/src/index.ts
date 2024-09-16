@@ -4,7 +4,8 @@ import { userRoutes } from './routes/user.routes';
 import { getFirestore } from "firebase-admin/firestore";
 import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
-import { server, io } from './socket';
+const http = require("http");
+// import { server, io } from './socket';
 
 const admin = require('firebase-admin');
 const serviceAccount = {
@@ -42,8 +43,21 @@ app.use(userRoutes);
 app.use(goalRoutes);
 app.use(matchesRoutes);
 
-const httpServer = server.listen(3000, () => {
-    console.log('HTTP Server is running on port 3000');
+// const httpServer = server.listen(3000, () => {
+//     console.log('HTTP Server is running on port 3000');
+// });
+
+// io.attach(httpServer);
+
+const server = http.createServer(app);
+
+const PORT = process.env.PORT || 2000;
+server.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
 });
 
-io.attach(httpServer);
+server.on("error", (error: any) => {
+  console.error("Server error:", error);
+});
+
+export default app;
