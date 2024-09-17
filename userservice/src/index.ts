@@ -7,14 +7,16 @@ import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
 import dotenv from 'dotenv';
 import * as fs from 'fs';
+console.log("GOOGLE APPLICATION CREDENTIALS", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 const serviceAccount = JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
+console.log("SERVICE ACCOUNT", serviceAccount);
 // import { server, io } from './socket';
 
 dotenv.config();
 const admin = require('firebase-admin');
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as string),
     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
 });
 
