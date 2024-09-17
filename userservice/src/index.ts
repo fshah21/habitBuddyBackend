@@ -6,13 +6,15 @@ import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
 import dotenv from 'dotenv';
+import * as fs from 'fs';
+const serviceAccount = JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
 // import { server, io } from './socket';
 
 dotenv.config();
 const admin = require('firebase-admin');
 
 admin.initializeApp({
-    credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS), 
+    credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
 });
 
