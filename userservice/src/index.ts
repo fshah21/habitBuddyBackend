@@ -5,18 +5,13 @@ import { getFirestore } from "firebase-admin/firestore";
 import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
-import dotenv from 'dotenv';
-import * as fs from 'fs';
-dotenv.config();
-console.log("GOOGLE APPLICATION CREDENTIALS", process.env.GOOGLE_APPLICATION_CREDENTIALS);
-const serviceAccount = JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
-console.log("SERVICE ACCOUNT", serviceAccount);
 // import { server, io } from './socket';
 
 const admin = require('firebase-admin');
+const serviceAccount = require('./habitbuddyFirebase.json');
 
 admin.initializeApp({
-    credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as string),
+    credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
 });
 
