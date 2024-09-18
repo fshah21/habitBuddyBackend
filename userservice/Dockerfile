@@ -15,7 +15,7 @@ COPY . .
 
 # Set environment variable for service account key
 ARG SERVICE_ACCOUNT
-ENV SERVICE_ACCOUNT=${SERVICE_ACCOUNT}
+RUN echo $SERVICE_ACCOUNT > /app/serviceAccountKey.json
 
 # Build the TypeScript code
 RUN npm run build
