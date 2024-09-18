@@ -8,7 +8,7 @@ const http = require("http");
 // import { server, io } from './socket';
 
 const admin = require('firebase-admin');
-const serviceAccount = require('./serviceAccountKey.json'); // This file will be created during the Docker build
+const serviceAccount = require('/app/serviceAccountKey.json'); // Ensure the path is correct
 
 console.log("SERVICE ACCOUNT", serviceAccount);
 
