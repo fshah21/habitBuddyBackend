@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import express from "express";
 import { userRoutes } from './routes/user.routes';
-// import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore } from "firebase-admin/firestore";
 import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
@@ -15,7 +15,7 @@ const http = require("http");
 //     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
 // });
 
-// export const db = getFirestore("habitbuddy");
+export const db = getFirestore("habitbuddy");
 
 const app = express();
 
