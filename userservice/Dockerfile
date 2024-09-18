@@ -20,5 +20,7 @@ RUN echo $SERVICE_ACCOUNT > /app/serviceAccountKey.json
 # Build the TypeScript code
 RUN npm run build
 
+RUN ls -l /app/lib
+
 # Specify the command to run when the container starts
 CMD ["node", "lib/index.js"]
