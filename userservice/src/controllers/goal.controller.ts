@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { db } from '../index.js';
+// import { db } from '../index.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export class GoalController {
+    /*
     static async addGoal(req: Request, res: Response) {
         try {
             const { name, description } = req.body;
@@ -103,4 +104,5 @@ export class GoalController {
             return res.status(500).send('Error adding user goal: ' + error.message);
         }
     }
+    */
 }

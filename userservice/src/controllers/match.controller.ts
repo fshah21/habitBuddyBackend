@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { db } from '../index.js';
+// import { db } from '../index.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MatchController {
-    static async findMatchForUserGoal(req: Request, res: Response) {
+  /*
+  static async findMatchForUserGoal(req: Request, res: Response) {
         const { user_id, goal_id } = req.body;
     try {
       const userGoalMatchesRef = await db.collection('usergoalmatches');
@@ -112,4 +113,5 @@ export class MatchController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+    */
 }

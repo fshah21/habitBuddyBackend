@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { db } from '../index.js';
+// import { db } from '../index.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export class UserController {
+    /*
     static async createUser(req: Request, res: Response) {
         try {
             const { email, password, name } = req.body;
@@ -94,5 +95,5 @@ export class UserController {
             return res.status(500).send('Error logging in: ' + error.message);
         }
     }
-
+    */
 }
