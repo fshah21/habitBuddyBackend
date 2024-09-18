@@ -1,21 +1,21 @@
 import * as functions from 'firebase-functions';
 import express from "express";
 import { userRoutes } from './routes/user.routes';
-import { getFirestore } from "firebase-admin/firestore";
+// import { getFirestore } from "firebase-admin/firestore";
 import { goalRoutes } from './routes/goal.routes';
 import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
 // import { server, io } from './socket';
 
-const admin = require('firebase-admin');
-const serviceAccount = require('./habitbuddyFirebase.json');
+// const admin = require('firebase-admin');
+// const serviceAccount = require('./habitbuddyFirebase.json');
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
+// });
 
-export const db = getFirestore("habitbuddy");
+// export const db = getFirestore("habitbuddy");
 
 const app = express();
 
