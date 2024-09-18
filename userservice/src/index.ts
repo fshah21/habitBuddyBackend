@@ -7,13 +7,15 @@ import { matchesRoutes } from './routes/matches.routes';
 const http = require("http");
 // import { server, io } from './socket';
 
-// const admin = require('firebase-admin');
-// const serviceAccount = require('./habitbuddyFirebase.json');
+const admin = require('firebase-admin');
+const serviceAccount = require('./habitbuddyfirebase2.json');
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
-// });
+console.log("SERVICE ACCOUNT", serviceAccount);
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://habitbuddy-d67d1.firebaseio.com"
+});
 
 // export const db = getFirestore("habitbuddy");
 
